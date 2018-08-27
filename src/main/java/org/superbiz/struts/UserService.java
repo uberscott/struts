@@ -17,13 +17,28 @@
 */
 package org.superbiz.struts;
 
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
-public interface UserService {
+@Repository
+public class UserService {
 
-    public void add(User user);
+    @PersistenceContext()
+    private EntityManager manager;
 
-    public User find(int id);
+    public void add(User user) {
+        manager.persist(user);
+    }
 
-    public List<User> findAll();
+    public User find(long id) {
+        return manager.find(User.class, id);
+    }
+
+    public List<User> findAll() {
+        return manager.createQuery("select u from User u").getResultList();
+    }
+
 }
